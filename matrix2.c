@@ -23,7 +23,7 @@ int main() {
 
     FILE *fp;
     fp = fopen("Test_for_COL_TO_COL.csv", "a");
-    fprintf (fp,"Matrix 1\tFOR %d ROWS\n",NROWS);
+    fprintf (fp,"Matrix 2\tFOR %d ROWS\n",NROWS);
     fprintf (fp,"COL TO COL\tMaccess/sec\tTime elapsed\n");
 
     table = (double *)malloc(NROWS*NCOLS*sizeof(double));
@@ -34,54 +34,54 @@ int main() {
 
     for(testruns=0;testruns<10;testruns++){
 
-    // warmup
-    for (i=0;i<NCOLS*NROWS;i++){
-      table[i]=1.0;
-      //printf("%f ", table[i]);
-    }
-
-    // get starting time (double, seconds)
-    get_walltime(&ts);
-
-    // workload
-    for (i=0;i<NCOLS;i++){
-        for (j=0;j<NROWS;j++){
-            table[NCOLS*j+i]+=j*1.0;
-            //printf("%f ", table[NCOLS*j+i]);
+        // warmup
+        for (i=0;i<NCOLS*NROWS;i++){
+          table[i]=1.0;
+          //printf("%f ", table[i]);
         }
-        //printf("\n");
-    }
 
-    // get ending time
-    get_walltime(&te);
+        // get starting time (double, seconds)
+        get_walltime(&ts);
 
-    // check results
-    for (i=0;i<NCOLS;i++){
-        for (j=0;j<NROWS;j++){
-            if(table[NCOLS*j+i]!=1.0+j*1.0){
-                printf("Error starting in array cell: [%d,%d]\n", i,j);
-                return 1;
+        // workload
+        for (i=0;i<NCOLS;i++){
+            for (j=0;j<NROWS;j++){
+                table[NCOLS*j+i]+=j*1.0;
+                //printf("%f ", table[NCOLS*j+i]);
+            }
+            //printf("\n");
+        }
+
+        // get ending time
+        get_walltime(&te);
+
+        // check results
+        for (i=0;i<NCOLS;i++){
+            for (j=0;j<NROWS;j++){
+                if(table[NCOLS*j+i]!=1.0+j*1.0){
+                    printf("Error starting in array cell: [%d,%d]\n", i,j);
+                    return 1;
+                }
             }
         }
-    }
 
-    /*
-    // check cell values in exact order
-    for (i=0;i<NCOLS*NROWS;i++){
-      //table[i]=1.0;
-      printf("%f ", table[i]);
-      if(i%NCOLS==NCOLS-1){
-          printf("\n");
-      }
-    }
-    */
+        /*
+        // check cell values in exact order
+        for (i=0;i<NCOLS*NROWS;i++){
+          //table[i]=1.0;
+          printf("%f ", table[i]);
+          if(i%NCOLS==NCOLS-1){
+              printf("\n");
+          }
+        }
+        */
 
-    // print time elapsed & Maccesses/sec
-    double time = te - ts ;
-    //printf ("Time elapsed = %lf\n" , time) ;
-    double maccess = (2.0*NROWS*NCOLS)/(time*1e6);
-    //printf ("Maccess/sec = %lf\n" , maccess);
-    fprintf (fp,"Test Run %d\t%lf\t%lf\n" , testruns+1,maccess,time) ;
+        // print time elapsed & Maccesses/sec
+        double time = te - ts ;
+        //printf ("Time elapsed = %lf\n" , time) ;
+        double maccess = (2.0*NROWS*NCOLS)/(time*1e6);
+        //printf ("Maccess/sec = %lf\n" , maccess);
+        fprintf (fp,"Test Run %d\t%lf\t%lf\n" , testruns+1,maccess,time) ;
 
     }
     
