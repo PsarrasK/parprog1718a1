@@ -5,7 +5,7 @@
 // compile with:
 // gcc -Wall -O2 -DNROWS=100 matrix1.c -o matrix1
 
-#define NCOLS 100
+#define NCOLS 10
 
 void get_walltime(double *wct) {
     struct timeval tp;
@@ -37,9 +37,9 @@ int main() {
     for (i=0;i<NROWS;i++){
         for (j=0;j<NCOLS;j++){
             table[NCOLS*i+j]+=j*1.0;
-            printf("%f ", table[NCOLS*i+j]);
+            //printf("%f ", table[NCOLS*i+j]);
         }
-        printf("\n");
+        //printf("\n");
     }
 
     // get ending time
@@ -53,6 +53,14 @@ int main() {
                 return 1;
             }
         }
+    }
+
+    for (i=0;i<NCOLS*NROWS;i++){
+      //table[i]=1.0;
+      printf("%f ", table[i]);
+      if(i%NCOLS==NCOLS-1){
+          printf("\n");
+      }
     }
 
     // print time elapsed and/or Maccesses/sec
