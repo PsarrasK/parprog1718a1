@@ -2,53 +2,65 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-// compile like:  gcc -Wall -O2 -DNROWS=10000 matrix1.c -o matrix1
-
+// compile with:
+// gcc -Wall -O2 -DNROWS=10000 matrix1.c -o matrix1
 
 #define NCOLS 100
 
 void get_walltime(double *wct) {
-  struct timeval tp;
-  gettimeofday(&tp,NULL);
-  *wct = (double)(tp.tv_sec+tp.tv_usec/1000000.0);
+    struct timeval tp;
+    gettimeofday(&tp,NULL);
+    *wct = (double)(tp.tv_sec+tp.tv_usec/1000000.0);
 }
-
 
 int main() {
-double *table;
-double ts,te;
+    double *table;
+    int i,j;
+    double ts,te;
 
+    table = (double *)malloc(NROWS*NCOLS*sizeof(double));
+    if (table==NULL) {
+        printf("alloc error!\n");
+        exit(1);
+    }
 
-  table = (double *)malloc(NROWS*NCOLS*sizeof(double)); 
-  if (table==NULL) {
-    printf("alloc error!\n");
-    exit(1);
-  }
+    // warmup
+    for (i=0;i<NCOLS*NROWS;i++){
+      table[i]=1.0;
+      //printf("%f ", table[i]);
+    }
 
-  // warmup
+    // get starting time (double, seconds)
+    get_walltime(&ts);
 
-  // ...your code here...
+    // workload
+    for (i=0;i<NROWS;i++){
+        for (j=0;j<NCOLS;j++){
+            table[NROWS*j+i]+=j*1.0;
+            printf("%f ", table[NROWS*j+i]);
+        }
+    }
 
-  // get starting time (double, seconds) 
-  get_walltime(&ts);
-  
-  // workload
+    // get ending time
+    get_walltime(&te);
 
-  // ...your code here...
+    // check results
+    for (i=0;i<NROWS;i++){
+        for (j=0;j<NCOLS;j++){
+            if(table[NROWS*j+i]!=1.0+j*1.0){
+                printf("Error starting in array cell: [%d,%d]\n", i,j);
+                return 1;
+            }
+        }
+    }
 
-  // get ending time
-  get_walltime(&te);
+    // print time elapsed and/or Maccesses/sec
+    double time = te - ts ;
+    double maccess = (2.0*NROWS*NCOLS)/(time*1e6);
+    printf ("Maccess/sec = %lf\n" , maccess) ;
 
-  // check results
-  
-  // ...your code here...
+    // free arrays
+    free(table);
 
-  // print time elapsed and/or Maccesses/sec
-  
-  // ...your code here...  
-  
-  free(table);
-
-  return 0;
+    return 0;
 }
-
