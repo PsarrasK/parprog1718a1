@@ -3,7 +3,7 @@
 #include <sys/time.h>
 
 // compile with:
-// gcc -Wall -O2 -DNROWS=10000 matrix1.c -o matrix1
+// gcc -Wall -O2 -DNROWS=100 matrix1.c -o matrix1
 
 #define NCOLS 100
 
@@ -36,9 +36,10 @@ int main() {
     // workload
     for (i=0;i<NROWS;i++){
         for (j=0;j<NCOLS;j++){
-            table[NROWS*j+i]+=j*1.0;
-            printf("%f ", table[NROWS*j+i]);
+            table[NCOLS*i+j]+=j*1.0;
+            printf("%f ", table[NCOLS*i+j]);
         }
+        printf("\n");
     }
 
     // get ending time
@@ -47,7 +48,7 @@ int main() {
     // check results
     for (i=0;i<NROWS;i++){
         for (j=0;j<NCOLS;j++){
-            if(table[NROWS*j+i]!=1.0+j*1.0){
+            if(table[NCOLS*i+j]!=1.0+j*1.0){
                 printf("Error starting in array cell: [%d,%d]\n", i,j);
                 return 1;
             }
